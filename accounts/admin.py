@@ -5,6 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .models.profile import MyUser, Profile
+from .forms import UserChangeForm, UserCreationForm
 
 
 class UserCreationForm(forms.ModelForm):

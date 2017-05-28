@@ -6,6 +6,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.signals import post_save
 
+USERNAME_RE = '^[a-zA-Z0-9.@+-]*$'
+
 
 class MyUserManager(BaseUserManager):
     def create_user(self, username, email, password=None):
@@ -39,8 +41,6 @@ class MyUserManager(BaseUserManager):
         user.is_staff = True
         user.save(using=self._db)
         return user
-
-USERNAME_RE = '^[a-zA-Z0-9.@+-]*$'
 
 
 class MyUser(AbstractBaseUser):
