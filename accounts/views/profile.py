@@ -21,13 +21,11 @@ def register(request, *args, **kwargs):
     return render(request, 'accounts/register.html', {'form': form})
 
 
-def user_login(request, *args, **kwargs):
+def login_view(request, *args, **kwargs):
     form = UserLoginForm(request.POST or None)
     if form.is_valid():
-        # form.save()
-        cln_username = form.cleaned_data.get('username')
-        user_obj = User.objects.get(username__iexact=cln_username)
-        # User.objects.
+        query = form.cleaned_data.get('query')
+        user_obj = User.objects.get(username__iexact=query)
         login(request, user_obj)
         return HttpResponseRedirect('/')
 

@@ -6,7 +6,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.signals import post_save
 
-USERNAME_RE = '^[a-zA-Z0-9.@+-]*$'
+USERNAME_RE = '^[a-zA-Z0-9.+-]*$'
 
 
 class MyUserManager(BaseUserManager):
@@ -50,7 +50,7 @@ class MyUser(AbstractBaseUser):
             RegexValidator(
                 regex=USERNAME_RE,
                 message='Username must be Alphanumeric or '
-                        'contain any of the following: ". @ + -"',
+                        'contain any of the following: ". + -"',
                 code='invalid_username'
             )
         ],
