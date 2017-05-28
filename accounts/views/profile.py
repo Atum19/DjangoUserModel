@@ -24,8 +24,9 @@ def register(request, *args, **kwargs):
 def login_view(request, *args, **kwargs):
     form = UserLoginForm(request.POST or None)
     if form.is_valid():
-        query = form.cleaned_data.get('query')
-        user_obj = User.objects.get(username__iexact=query)
+        user_obj = form.cleaned_data.get('user_obj')
+        # query = form.cleaned_data.get('query')
+        # user_obj = User.objects.get(username__iexact=query)
         login(request, user_obj)
         return HttpResponseRedirect('/')
 
