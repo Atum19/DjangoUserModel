@@ -6,6 +6,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.signals import post_save
 
+from ..utils import code_generator
+
 USERNAME_RE = '^[a-zA-Z0-9.+-]*$'
 
 
@@ -99,6 +101,26 @@ class MyUser(AbstractBaseUser):
     #     return self.is_admin
 
 
+class ActivationProfile(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    key = models.CharField(max_length=120)
+    expired = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        self.key = code_generator()
+        super(ActivationProfile, self).save(*args, **kwargs)
+
+
+def post_save_activation_receiver(sender, instance, created, *args, **kargs):
+    if created:
+        # send email
+        print('activations created')
+        url = "https://joincfe.com/activate" + instance.key
+        # send email()
+
+post_save.connect(post_save_activation_receiver, sender=ActivationProfile)
+
+
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     city = models.CharField(max_length=120, null=True, blank=True)
@@ -111,6 +133,7 @@ def post_save_user_model_receiver(sender, instance, created, *args, **kargs):
     if created:
         try:
             Profile.objects.create(user=instance)
+            ActivationProfile.objects.create(user=instance)
         except:
             pass
 

@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from accounts.views.profile import home, register, login_view, user_logout
+from accounts.views.profile import activate_user_view, home, register, login_view, user_logout
 
 urlpatterns = [
     url(r'^$', home),
@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^register/', register),
     url(r'^login/', login_view),
     url(r'^logout/', user_logout),
+    url(r'^activate/(?P<code>[a-z0-9].*)/$', activate_user_view),
 ]

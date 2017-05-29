@@ -1,8 +1,9 @@
 from django.contrib.auth import login, logout, get_user_model
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 
 from ..forms import UserCreationForm, UserLoginForm
+from  ..models.profile import ActivationProfile
 
 User = get_user_model()
 
@@ -36,3 +37,20 @@ def login_view(request, *args, **kwargs):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/login')
+
+
+def activate_user_view(request, code=None, *args, **kwargs):
+    if code:
+        act_profile_qs = ActivationProfile.objects.filter(key=code)
+        if act_profile_qs.exists() and act_profile_qs.count() != 1:
+            act_obj = act_profile_qs.first()
+            if not act_obj.expaired:
+                user_obj = act_obj.user
+                user_obj.is_active = True
+                user_obj.save()
+                user_obj.expired = True
+                act_obj.save()
+                return HttpResponseRedirect("/login")
+    # invalid code
+    return HttpResponseRedirect("/login")
+

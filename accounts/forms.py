@@ -58,7 +58,6 @@ class UserCreationForm(forms.ModelForm):
         user.is_active = False
         # create a new user hash for activating email
 
-
         if commit:
             user.save()
         return user
